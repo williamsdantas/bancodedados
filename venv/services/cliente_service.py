@@ -7,9 +7,7 @@ def get_all_clientes():
     return [cliente for cliente in clientes]
 
 def get_cliente_by_id(id_cliente):
-    try:
-        print(f"Buscando cliente por id_cliente: {id_cliente}")
-        
+    try: 
         dict_cliente = clientes_collection.find_one({"id_cliente": int(id_cliente)})
         
         if dict_cliente:
@@ -80,11 +78,6 @@ def update_cliente(id_cliente, dados):
     except Exception as e:
         print(f"Erro ao atualizar cliente: {e}")
         return None
-
-        
-    
-
-    
 
 def delete_cliente(id_cliente):
     try:

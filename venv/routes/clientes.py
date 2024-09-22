@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from config.config import clientes_collection
 from models.cliente import Cliente
-from services.cliente_service import get_all_clientes , create_cliente , update_cliente, get_cliente_by_id #, delete_cliente
+from services.cliente_service import get_all_clientes , create_cliente , update_cliente, get_cliente_by_id , delete_cliente
 
 clientes_bp = Blueprint('clientes_bp', __name__)
 

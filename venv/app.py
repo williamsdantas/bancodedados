@@ -1,105 +1,16 @@
 from bson import ObjectId
 from flask import Flask, jsonify, request
-from config.config import bd, pedidos_collection, produtos_collection, clientes_collection
+from config.config import bd, pedidos_collection
 
 from routes.clientes import clientes_bp
+from routes.produtos import produtos_bp
+from routes.pedidos import pedidos_bp
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
     return "Hello World."
-
-@app.route("/produtos")
-def lista_produtos():
-    try:
-        produtos = produtos_collection.find()
-
-        produtos_serializado = []
-        for produto in produtos:
-            produto['_id'] = str(produto['_id'])
-            produtos_serializado.append(produto)
-        
-        return jsonify(produtos_serializado), 200
-
-    except Exception as e:
-        print(f"Erro: {e}")
-        return "Erro ao listar produtos.", 500
-
-@app.route("/inserirProduto", methods=['POST'])
-def set_produto():
-    dados = request.get_json()
-
-    novo_produto = Produtos(
-        id_produto=dados['id_produto'],
-        nome=dados['nome'],
-        categoria=dados['categoria'],
-        preco=dados['preco'],
-        descricao=dados["descricao"]
-    )
-
-    resultado = produtos_collection.insert_one(novo_produto.serialize())
-
-    if  resultado.inserted_id:
-        novo_produto.id_produto = str(resultado.inserted_id)
-        return jsonify(novo_produto.serialize()), 201
-    else:
-        return "Erro ao inserir produto.", 500
-
-@app.route("/alteraProduto/<id_produto>", methods=["PUT"])
-def update_produto(id_produto):
-    try:
-        dados = request.get_json()
-
-        # Converter id_produto para inteiro (ajuste se necessário)
-        id_produto = int(id_produto)
-
-        # Buscar o documento utilizando o id_produto personalizado
-        resultado_busca = produtos_collection.find_one({"id_produto": id_produto})
-
-        if resultado_busca:
-            _id = resultado_busca["_id"]
-
-            # Atualiza o documento utilizando o _id
-            resultado_atualizacao = produtos_collection.update_one(
-                {"_id": _id},
-                {"$set": dados}
-            )
-
-            if resultado_atualizacao.modified_count == 1:
-                return f"produto {id_produto} atualizado com sucesso.", 200
-            else:
-                return f"Erro ao atualizar produto.", 500
-        else:
-            return f"produto com id {id_produto} não encontrado.", 404
-
-    except Exception as e:
-        return f"Erro ao atualizar produto: {e}", 500
-
-@app.route("/excluiproduto/<id_produto>", methods=["DELETE"])
-def delete_produto(id_produto):
-    try:
-
-        # Converter id_produto para inteiro (ajuste se necessário)
-        id_produto = int(id_produto)
-
-        # Buscar o documento utilizando o id_produto personalizado
-        resultado_busca = produtos_collection.find_one({"id_produto": id_produto})
-
-        if resultado_busca:
-            _id = resultado_busca["_id"]
-
-            resultado = produtos_collection.delete_one(
-                {"_id": _id}
-            )
-            print(resultado)
-            if resultado.deleted_count == 1:
-                return f"produto {id_produto} excluido com sucesso.", 200
-            else:
-                return f"produto com id {id_produto} não encontrado.", 404
-
-    except Exception as e:
-        return f"Erro ao excluir produto: {e}", 500
 
 @app.route("/pedidos", methods=['POST'])
 def set_pedido():
@@ -133,8 +44,8 @@ def set_pedido():
 
 # Registrar os blueprints
 app.register_blueprint(clientes_bp)
-#app.register_blueprint(produtos_bp)
-#app.register_blueprint(pedidos_bp)
+app.register_blueprint(produtos_bp)
+app.register_blueprint(pedidos_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)
