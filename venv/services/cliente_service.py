@@ -7,31 +7,8 @@ def get_all_clientes():
     return [cliente for cliente in clientes]
 
 def get_cliente_by_id(id_cliente):
-    try: 
-        print(f"buscando cliente pelo id_cliente={id_cliente}")
-        
-        dict_cliente = clientes_collection.find_one({"id_cliente": int(id_cliente)})
-
-        print(f"Documento encontrado pelo id_cliente={dict_cliente}")
-        
-        # Retornar o documento MongoDB diretamente
-        return dict_cliente
-    
-        """ print(f" cliente encontrado pelo id_cliente={dict_cliente}")
-        
-        if dict_cliente:
-            # Se o cliente foi encontrado, retorne um obj cliente
-           return Cliente(
-                _id             = str(dict_cliente['_id']),
-                id_cliente      = dict_cliente['id_cliente'], 
-                nome            = dict_cliente['nome'], 
-                email           = dict_cliente['email'], 
-                cpf             = dict_cliente['cpf'], 
-                data_nascimento = dict_cliente['data_nascimento']
-            )
-        else:
-            # Se o cliente não foi encontrado, retorne None
-            return None """
+    try:        
+        return clientes_collection.find_one({"id_cliente": int(id_cliente)})
             
     except ValueError:
         # Se o id_cliente não puder ser convertido para inteiro
