@@ -26,9 +26,6 @@ Criamos o CRUD para Produtos e Clientes. Você deve completar com o CRUD de Pedi
   config.py
 </pre>
 <p>No arquivo app.py estavam definidas as classes, serviços e rotas, enquanto que no arquivo config.py estavam definidas a conexão com o banco de dados MongoDB. A modularização traz diversos benefícios para a escalabilidade, organização e manutenção do código. </p>
-
-
-
   
 ### Modularização do projeto
 <p>  A modularização traz diversos benefícios para a escalabilidade, organização e manutenção do código:
