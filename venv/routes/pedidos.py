@@ -26,13 +26,11 @@ def set_pedido():
     dados = request.get_json()
     
     pedido = create_pedido(dados)
-    if pedido is not None:
-            return jsonify(pedido.serialize()), 201
+    if isinstance(pedido, Pedidos):
+        return jsonify(pedido.serialize()), 201
     else:
-        return f"O id {dados['id_pedido']} já foi utilizado por outro pedido.", 500  # Caso já tenha sido inserido
-    
-    
-    
+        return pedido, 500  
+
     
     
     

@@ -23,11 +23,11 @@ def set_cliente():
     try:
         novo_cliente = create_cliente(dados)  # Usando a função que cria o cliente
         
-        if novo_cliente is not None:
+        if isinstance(novo_cliente,Cliente):
             # Retornando os dados do cliente criado, incluindo o ID gerado
             return jsonify(novo_cliente.serialize()), 201  # Serializando o novo cliente
         else:
-            return f"O id {dados['id_cliente']} já foi utilizado por outro cliente.", 500  # Caso já tenha sido inserido
+            return novo_cliente, 500 
         
     except Exception as e:
         return "Erro ao inserir cliente.", 500  # Mensagem de erro genérica

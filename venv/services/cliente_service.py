@@ -8,7 +8,7 @@ def get_all_clientes():
     clientes = clientes_collection.find().sort("id_cliente", 1)
     return [cliente for cliente in clientes]
 
-# serviço responsável pela pesquisa de cleintes pelo id_cliente
+# serviço responsável pela pesquisa de clientes pelo id_cliente
 # a implementação da pesquisa retorna um obj cliente , ou None.
 def get_cliente_by_id(id_cliente):
     try:        
@@ -26,6 +26,7 @@ def get_cliente_by_id(id_cliente):
 # a implementação não permite inclusão de clientes com id_cliente repetidos.
 def create_cliente(dados):
     
+    id_cliente=dados['id_cliente']
      # Verifica se já existe um cliente com o mesmo id_cliente
     cliente = get_cliente_by_id(dados['id_cliente']) 
 
@@ -43,7 +44,7 @@ def create_cliente(dados):
             return novo_cliente  # Retornando o cliente criado
         else:
             return None
-    return None
+    return f"Já existe um cliente com o id {id_cliente}"
     
 # serviço responsável pela alteração de cliente com o id informado.
 # a implementação altera o cliente pelo id_cliente, e retorna o objeto cliente alterado.
