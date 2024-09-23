@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from config.config import produtos_collection
 from models.produto import Produtos
-from services.produto_service import lista_todos_produtos, create_produto
+from services.produto_service import lista_todos_produtos, create_produto, get_produto_by_id
 
 produtos_bp = Blueprint('produtos_bp', __name__)
 
@@ -20,6 +20,25 @@ def lista_produtos():
     except Exception as e:
         print(f"Erro: {e}")
         return "Erro ao listar produtos.", 500
+    
+#
+#
+@produtos_bp.route("/produtos/<id_produto>", methods=["GET"])
+def consultaProduto_por_id(id_produto):
+    try:
+         # Converter id_produto para inteiro 
+        id_produto = int(id_produto)
+        
+        produto = get_produto_by_id(id_produto)
+        
+        if produto:
+            produto['_id'] = str(produto['_id'])
+            return jsonify(produto), 200 
+        else:           
+            return f"O id {id_produto} informado não foi encontrado.",200
+    except ValueError:
+        # Se o id_produto não for um número inteiro válido
+        return f"O ID precisa ser um número inteiro", 400
 
 @produtos_bp.route("/inserirProduto", methods=['POST'])
 def set_produto():
@@ -89,3 +108,23 @@ def delete_produto(id_produto):
 
     except Exception as e:
         return f"Erro ao excluir produto: {e}", 500
+    
+@produtos_bp.route("/excluiProduto/<id_produto>", methods=["DELETE"])
+def excluir_produto(id_produto):
+    try:
+
+        # Converter id_produto para inteiro (ajuste se necessário)
+        id_produto = int(id_produto)       
+        
+        resultado = delete_produto(id_produto)
+        print(f"resultado: {resultado}")    
+            
+        if resultado:
+            return "", 204
+        else:
+            return f"produto com id {id_produto} não encontrado.", 404
+    except ValueError:
+        # Se o id_produto não for um número inteiro válido
+        return f"O ID precisa ser um número inteiro", 400
+    except Exception as e:
+        return {f"Erro ao excluir produto: {e}"}, 500
