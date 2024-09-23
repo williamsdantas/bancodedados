@@ -87,7 +87,7 @@ def excluir_cliente(id_cliente):
         if resultado:
             return "", 204
         else:
-            return {f"Cliente com id {id_cliente} não encontrado."}, 404
+            return f"Cliente com id {id_cliente} não encontrado.", 404
     except ValueError:
         # Se o id_cliente não for um número inteiro válido
         return f"O ID precisa ser um número inteiro", 400

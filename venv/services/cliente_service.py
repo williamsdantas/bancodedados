@@ -83,8 +83,7 @@ def delete_cliente(id_cliente):
         if resultado_busca:
             _id = resultado_busca["_id"]
 
-            resultado = clientes_collection.delete_one({"_id": _id}
-            )
+            resultado = clientes_collection.delete_one({"_id": _id})
 
             if resultado.deleted_count == 1:
                 return True
