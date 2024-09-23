@@ -2,10 +2,14 @@ from config.config import clientes_collection
 from bson import ObjectId
 from models.cliente import Cliente
 
+# serviço responsável pela listagem  de clientes. 
+# a implementação da consulta retorna uma lista ordenada pelo id_cliente
 def get_all_clientes():
     clientes = clientes_collection.find().sort("id_cliente", 1)
     return [cliente for cliente in clientes]
 
+# serviço responsável pela pesquisa de cleintes pelo id_cliente
+# a implementação da pesquisa retorna um obj cliente , ou None.
 def get_cliente_by_id(id_cliente):
     try:        
         return clientes_collection.find_one({"id_cliente": int(id_cliente)})
@@ -18,7 +22,8 @@ def get_cliente_by_id(id_cliente):
         print(f"Erro ao buscar cliente por ID: {e}")
         return None
 
-
+# serviço responsável pela criação de cliente no catálogo de clientes
+# a implementação não permite inclusão de clientes com id_cliente repetidos.
 def create_cliente(dados):
     
      # Verifica se já existe um cliente com o mesmo id_cliente
