@@ -40,7 +40,8 @@ def create_cliente(dados):
             return None
     return None
     
-
+# serviço responsável pela alteração de cliente com o id informado.
+# a implementação altera o cliente pelo id_cliente, e retorna o objeto cliente alterado.
 def update_cliente(id_cliente, dados):
     try:
         # Busca e atualiza o cliente usando find_one_and_update

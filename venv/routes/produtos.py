@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from config.config import produtos_collection
 from models.produto import Produtos
-from services.produto_service import lista_todos_produtos, create_produto, get_produto_by_id
+from services.produto_service import lista_todos_produtos, create_produto, get_produto_by_id, delete_produto
 
 produtos_bp = Blueprint('produtos_bp', __name__)
 
@@ -84,30 +84,6 @@ def update_produto(id_produto):
     except Exception as e:
         return f"Erro ao atualizar produto: {e}", 500
 
-@produtos_bp.route("/excluiproduto/<id_produto>", methods=["DELETE"])
-def delete_produto(id_produto):
-    try:
-
-        # Converter id_produto para inteiro (ajuste se necessário)
-        id_produto = int(id_produto)
-
-        # Buscar o documento utilizando o id_produto personalizado
-        resultado_busca = produtos_collection.find_one({"id_produto": id_produto})
-
-        if resultado_busca:
-            _id = resultado_busca["_id"]
-
-            resultado = produtos_collection.delete_one(
-                {"_id": _id}
-            )
-            print(resultado)
-            if resultado.deleted_count == 1:
-                return f"produto {id_produto} excluido com sucesso.", 200
-            else:
-                return f"produto com id {id_produto} não encontrado.", 404
-
-    except Exception as e:
-        return f"Erro ao excluir produto: {e}", 500
     
 @produtos_bp.route("/excluiProduto/<id_produto>", methods=["DELETE"])
 def excluir_produto(id_produto):
@@ -117,8 +93,7 @@ def excluir_produto(id_produto):
         id_produto = int(id_produto)       
         
         resultado = delete_produto(id_produto)
-        print(f"resultado: {resultado}")    
-            
+                    
         if resultado:
             return "", 204
         else:

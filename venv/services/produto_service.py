@@ -40,10 +40,39 @@ def create_produto(dados):
         produto = produtos_collection.insert_one(novo_produto.serialize())
         
         if produto.inserted_id:
-            return novo_produto  # Retornando o cliente criado
+            return novo_produto  # Retornando o produto criado
         else:
             return None
     return None
+
+# serviço responsável pela alteração de produto com o id informado.
+# a implementação altera o produto pelo id_produto, e retorna o objeto produto alterado.
+def update_produto(id_produto, dados):
+    try:
+        # Busca e atualiza o produto usando find_one_and_update
+        produto_atualizado = produtos_collection.find_one_and_update(
+            {"id_produto": int(id_produto)},  # Condição de busca
+            {"$set": dados},  # Dados a serem atualizados
+            return_document=True  # Retorna o documento atualizado
+        )
+        
+        if produto_atualizado:
+            # Retorna o produto atualizado como um objeto produto
+            return Produtos(
+                id_produto=produto_atualizado['id_produto'], 
+                nome=produto_atualizado['nome'], 
+                descricao=produto_atualizado['descricao'], 
+                preco=produto_atualizado['preco'], 
+                categoria=produto_atualizado['categoria']
+            )
+        else:
+            # Se nenhum produto foi encontrado para o id_produto fornecido
+            return None
+
+    except Exception as e:
+        print(f"Erro ao atualizar produto: {e}")
+        return None
+    
 
 # serviço responsável pela exclusão de produto com o id informado.
 # a implementação pesquisa o produto pelo id_produto, mas exclui pelo "_id" do documento.
