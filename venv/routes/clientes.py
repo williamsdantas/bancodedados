@@ -64,8 +64,9 @@ def consultaCliente_por_id(id_cliente):
         
         cliente = get_cliente_by_id(id_cliente)
         
-        if isinstance(cliente, Cliente):
-            return jsonify(cliente.serialize()), 200 
+        if cliente:
+            cliente['_id'] = str(cliente['_id'])
+            return jsonify(cliente), 200 
         else:           
             return f"O id {id_cliente} informado não foi encontrado.",200
     except ValueError:
@@ -74,14 +75,15 @@ def consultaCliente_por_id(id_cliente):
     
 
 @clientes_bp.route("/excluiCliente/<id_cliente>", methods=["DELETE"])
-def delete_cliente(id_cliente):
+def excluir_cliente(id_cliente):
     try:
 
         # Converter id_cliente para inteiro (ajuste se necessário)
         id_cliente = int(id_cliente)       
         
         resultado = delete_cliente(id_cliente)
-                
+        print(f"resultado: {resultado}")    
+            
         if resultado:
             return "", 204
         else:

@@ -8,20 +8,31 @@ def get_all_clientes():
 
 def get_cliente_by_id(id_cliente):
     try: 
+        print(f"buscando cliente pelo id_cliente={id_cliente}")
+        
         dict_cliente = clientes_collection.find_one({"id_cliente": int(id_cliente)})
+
+        print(f"Documento encontrado pelo id_cliente={dict_cliente}")
+        
+        # Retornar o documento MongoDB diretamente
+        return dict_cliente
+    
+        """ print(f" cliente encontrado pelo id_cliente={dict_cliente}")
         
         if dict_cliente:
             # Se o cliente foi encontrado, retorne um obj cliente
            return Cliente(
-                id_cliente=dict_cliente['id_cliente'], 
-                nome=dict_cliente['nome'], 
-                email=dict_cliente['email'], 
-                cpf=dict_cliente['cpf'], 
-                data_nascimento=dict_cliente['data_nascimento']
+                _id             = str(dict_cliente['_id']),
+                id_cliente      = dict_cliente['id_cliente'], 
+                nome            = dict_cliente['nome'], 
+                email           = dict_cliente['email'], 
+                cpf             = dict_cliente['cpf'], 
+                data_nascimento = dict_cliente['data_nascimento']
             )
         else:
             # Se o cliente não foi encontrado, retorne None
-            return None
+            return None """
+            
     except ValueError:
         # Se o id_cliente não puder ser convertido para inteiro
         print(f"ID inválido: {id_cliente}")
@@ -78,7 +89,9 @@ def update_cliente(id_cliente, dados):
     except Exception as e:
         print(f"Erro ao atualizar cliente: {e}")
         return None
-
+    
+# serviço responsável pela exclusão de cliente com o id informado.
+# a implementação pesquisa o cliente pelo id_cliente, mas exclui pelo "_id" do documento.
 def delete_cliente(id_cliente):
     try:
 
@@ -86,13 +99,14 @@ def delete_cliente(id_cliente):
         id_cliente = int(id_cliente)
 
         # Buscar o documento utilizando o id_cliente personalizado
-        resultado_busca = clientes_collection.find_one({"id_cliente": id_cliente})
-
+        resultado_busca = get_cliente_by_id(id_cliente)
+        
+        print(f"cliente encontrado:{resultado_busca}")
+        
         if resultado_busca:
             _id = resultado_busca["_id"]
 
-            resultado = clientes_collection.delete_one(
-                {"_id": _id}
+            resultado = clientes_collection.delete_one({"_id": _id}
             )
 
             if resultado.deleted_count == 1:
